@@ -58,6 +58,9 @@
     <Compile Include="EndpointClasses\EndToEndTest.cs" />
     <Compile Include="EndpointClasses\Producers\FILEProducerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routing\DummyRouteBuilder.cs" />
+    <Compile Include="Routing\RouteBuilderTest.cs" />
+    <Compile Include="Routing\RouteDefinitionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

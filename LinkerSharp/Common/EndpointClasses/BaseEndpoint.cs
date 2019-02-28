@@ -42,6 +42,20 @@ namespace LinkerSharp.Common.EndpointClasses
                 return TransportTypeEnum.IN_OUT;
             }
         }
+
+        protected TransactionDTO CreateTransaction(int ID, string Origin, string FileName, Dictionary<string, string> Params)
+        {
+            var Message = new TransmissionMessageDTO() { Origin = Origin, Name = FileName };
+
+            var Result = new TransactionDTO() { TransactionID = ID, Transport = this.GetTransactionEnum(Params), Properties = Params, RequestMessage = Message };
+
+            if (Result.Transport == TransportTypeEnum.IN_OUT)
+            {
+                Result.ResponseMessage = new TransmissionMessageDTO() { Origin = Message.Origin, Name = Message.Name };
+            }
+
+            return Result;
+        }
         #endregion
     }
 }

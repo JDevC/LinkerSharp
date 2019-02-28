@@ -26,7 +26,7 @@ namespace LinkerSharp.Common.EndpointClasses.Consumers
                 int ID = 1;
                 foreach (var FileName in FileNames)
                 {
-                    var DTO = this.CreateTransaction(ID, FileName, this.Params);
+                    var DTO = base.CreateTransaction(ID, FileName, FileName.Split("\\".ToCharArray()).Last(), this.Params);
 
                     try
                     {
@@ -46,11 +46,9 @@ namespace LinkerSharp.Common.EndpointClasses.Consumers
                     {
                         EndpointTools.SetErrorReason(DTO, "", $"Endpoint '{this.Endpoint}' cannot be reached: {NotAllowedEx.Message}", NotAllowedEx.StackTrace, _Logger);
                     }
-                    finally
-                    {
-                        Result.Add(DTO);
-                        ID++;
-                    }
+
+                    Result.Add(DTO);
+                    ID++;
                 }
             }
 
@@ -79,24 +77,6 @@ namespace LinkerSharp.Common.EndpointClasses.Consumers
             }
 
             return Files.Any();
-        }
-
-        private TransactionDTO CreateTransaction(int ID, string FileName, Dictionary<string, string> Params)
-        {
-            var Result = new TransactionDTO()
-            {
-                TransactionID = ID,
-                Transport = base.GetTransactionEnum(Params),
-                Properties = Params,
-                RequestMessage = new TransmissionMessageDTO() { Origin = FileName, Name = FileName.Split("\\".ToCharArray()).Last() }
-            };
-
-            if (Result.Transport == TransportTypeEnum.IN_OUT)
-            {
-                Result.ResponseMessage = new TransmissionMessageDTO() { Origin = Result.RequestMessage.Origin, Name = Result.RequestMessage.Name };
-            }
-
-            return Result;
         }
         #endregion
     }
