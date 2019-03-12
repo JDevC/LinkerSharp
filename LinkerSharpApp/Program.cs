@@ -1,7 +1,7 @@
 ﻿using LinkerSharp.Common;
-using LinkerSharpApp.RouteBuilders;
+using LinkerSharpDemo.RouteBuilders;
 
-namespace LinkerSharpApp
+namespace LinkerSharpDemo
 {
     class Program
     {

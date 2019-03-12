@@ -34,7 +34,7 @@ namespace LinkerSharpTests.EndpointClasses.Producers
             {
                 RequestMessage = TestMessage,
                 ResponseMessage = TestMessage,
-                Properties = new Dictionary<string, string>() { { "autoclean", "false" } }
+                Headers = new Dictionary<string, string>() { { "autoclean", "false" } }
             };
 
             TestProducer.Transaction = TestTransaction;

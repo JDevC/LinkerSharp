@@ -2,6 +2,7 @@
 using LinkerSharp.Common.EndpointClasses.Interfaces;
 using LinkerSharp.Common.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinkerSharp.Common.Routing
 {
@@ -17,6 +18,7 @@ namespace LinkerSharp.Common.Routing
             this.Transactions = Transactions;
         }
 
+        #region Public Methods: Routing
         /// <summary>
         /// Delegate for defining a process behaviour on the fly.
         /// </summary>
@@ -26,13 +28,38 @@ namespace LinkerSharp.Common.Routing
         /// <summary>
         /// Accepts a delegate function in order to manipulate all transactions in a concrete way.
         /// </summary>
-        /// <param name="Processor"><see cref="Processor"/> function for defining a process behaviour on the fly.</param>
+        /// <param name="ProcessorFunc"><see cref="Processor"/> function for defining a process behaviour on the fly.</param>
         /// <returns></returns>
-        public RouteDefinition Process(Processor Processor)
+        public RouteDefinition Process(Processor ProcessorFunc)
         {
             foreach (var Transaction in this.Transactions)
             {
-                Processor(Transaction);
+                ProcessorFunc(Transaction);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Gets info from another endpoint and stores it into the transaction's request message
+        /// </summary>
+        /// <param name="Uri">A complete URI with LinkerSharp syntax.</param>
+        /// <returns></returns>
+        public RouteDefinition Enrich(string Uri)
+        {
+            var ConsumerFactory = new EndpointFactory<IConsumer>();
+
+            var Consumer = ConsumerFactory.GetFrom(Uri);
+            Consumer.Params["just-in"] = "true";
+
+            var Result = Consumer.ReceiveMessages().FirstOrDefault();
+            foreach (var Transaction in this.Transactions)
+            {
+                foreach (var Header in Result.Headers)
+                {
+                    Transaction.Headers[Header.Key] = Header.Value;
+                }
+                Transaction.RequestMessage = Result.RequestMessage;
             }
 
             return this;
@@ -51,10 +78,22 @@ namespace LinkerSharp.Common.Routing
                 Producer.SendMessage();
             }
         }
+        #endregion
 
-        #region Public Methods: Helpers
+        #region Public Methods: Shortcuts
         /// <summary>
-        /// Direct access to edit destination message in a single-line method.
+        /// Direct access to edit transaction headers in a single-line method.
+        /// </summary>
+        /// <param name="Key"></param>
+        /// <param name="Value"></param>
+        /// <returns></returns>
+        public RouteDefinition SetHeader(string Key, string Value)
+        {
+            return this.Process(x => x.Headers[Key] = Value);
+        }
+
+        /// <summary>
+        /// Direct access to edit destination message's content in a single-line method.
         /// </summary>
         /// <param name="NewContent">Which content we need in the message body.</param>
         /// <param name="Append">true: The new content is appended at the end of the message; false: The message body is overwrited.</param>

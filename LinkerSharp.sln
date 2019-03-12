@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkerSharp", "LinkerSharp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkerSharpTests", "LinkerSharpTests\LinkerSharpTests.csproj", "{34657150-D7FA-424A-8AF1-BC8BA7B4D8C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkerSharpApp", "LinkerSharpApp\LinkerSharpApp.csproj", "{392C2634-785A-4302-83F7-9C829A0EF2AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkerSharpDemo", "LinkerSharpApp\LinkerSharpDemo.csproj", "{392C2634-785A-4302-83F7-9C829A0EF2AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

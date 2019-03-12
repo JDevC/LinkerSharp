@@ -26,11 +26,10 @@ namespace LinkerSharp.Common.EndpointClasses.Consumers
                 int ID = 1;
                 foreach (var FileName in FileNames)
                 {
-                    var DTO = base.CreateTransaction(ID, FileName, FileName.Split("\\".ToCharArray()).Last(), this.Params);
-
+                    TransactionDTO DTO = null;
                     try
                     {
-                        DTO.RequestMessage.Content = File.ReadAllText(FileName);
+                        DTO = base.CreateTransaction(ID, FileName, FileName.Split("\\".ToCharArray()).Last(), this.Params, File.ReadAllText(FileName));
 
                         this.Success = true;
                     }
@@ -61,7 +60,14 @@ namespace LinkerSharp.Common.EndpointClasses.Consumers
             Files = new string[] { };
             try
             {
-                Files = Directory.GetFiles(this.Endpoint);
+                if (File.Exists(Endpoint))
+                {
+                    Files = new string[] { Endpoint };
+                }
+                else if (Directory.Exists(Endpoint))
+                {
+                    Files = Directory.GetFiles(this.Endpoint);
+                }
             }
             catch (DirectoryNotFoundException DNotFoundEx)
             {

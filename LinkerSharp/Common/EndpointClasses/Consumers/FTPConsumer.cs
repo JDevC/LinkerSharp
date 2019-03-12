@@ -33,7 +33,7 @@ namespace LinkerSharp.Common.EndpointClasses.Consumers
                 {
                     TransactionID = 1,
                     Transport = base.GetTransactionEnum(this.Params),
-                    Properties = this.Params,
+                    Headers = this.Params,
                     RequestMessage = new TransmissionMessageDTO() { Origin = this.Endpoint }
                 };
 

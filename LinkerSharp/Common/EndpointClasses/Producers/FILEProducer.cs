@@ -10,16 +10,30 @@ namespace LinkerSharp.Common.EndpointClasses.Producers
     {
         private static readonly log4net.ILog _Logger = log4net.LogManager.GetLogger(typeof(FILEProducer));
 
+        #region Private Attributes: Constants
+        private const string AutoCleanParamKey = "autoclean";
+        private const string AutoCleanParamDefault = "true";
+        #endregion
+
         public FILEProducer(string Path)
         {
             this.Endpoint = Path;
+            if (!this.Params.ContainsKey(AutoCleanParamKey))
+            {
+                this.Params[AutoCleanParamKey] = AutoCleanParamDefault;
+            }
+
             this.Transaction = new TransactionDTO() { ResponseMessage = new TransmissionMessageDTO() };
         }
 
-        //public override bool SendMessage()
         public bool SendMessage()
         {
-            this.Transaction.ResponseMessage.Destiny = $"{this.Endpoint}{this.Transaction.ResponseMessage.Name}";
+            if (!this.Transaction.Headers.ContainsKey(AutoCleanParamKey))
+            {
+                this.Transaction.Headers[AutoCleanParamKey] = this.Params[AutoCleanParamKey];
+            }
+
+            this.Transaction.ResponseMessage.Destiny = Path.Combine(this.Endpoint, this.Transaction.ResponseMessage.Name);
 
             try
             {
@@ -43,7 +57,7 @@ namespace LinkerSharp.Common.EndpointClasses.Producers
 
             this.Success = File.Exists(this.Transaction.ResponseMessage.Destiny);
 
-            this.CleanFilesAfterProcessing(this.Success, this.Transaction.Properties);
+            this.CleanFilesAfterProcessing(this.Success, this.Transaction.Headers);
 
             return this.Success;
         }

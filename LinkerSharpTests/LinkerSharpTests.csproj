@@ -52,6 +52,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EndpointClasses\Consumers\FTPConsumerTest.cs" />
     <Compile Include="EndpointClasses\Consumers\FILEConsumerTest.cs" />
     <Compile Include="EndpointClasses\EndpointFactoryTest.cs" />
     <Compile Include="EndpointClasses\EndpointToolsTest.cs" />
@@ -88,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TestFiles\Destiny\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestFiles\Enrichment\TestEnrichmentFile.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
