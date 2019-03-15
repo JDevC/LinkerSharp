@@ -8,18 +8,30 @@ LinkerSharp is (nowadays) a pure experimental attempt to port the most basic fea
 
 The original Java project can be found here: https://github.com/apache/camel
 
-## Achieved for now
-- Working File Endpoint component (**FILEConsumer** and **FILEProducer**)
-- Message encapsulation into a transaction model (which is only 'transactional' in name)
-- **RouteBuilder** with***From(string Uri)*** method.
-- **RouteDefinition** with the following methods:
-	- ***From(string Uri)***
-	- ***SetBody(string Content, [bool Append])***
-	- ***SetHeader(string Key, string Value)***
-	- ***Process(Processor Processor)***
-	- ***Enrich(string Uri)***
-	- ***To(string Uri)***
+## Goals
 
-## Next Goals
-- Create a working FTP component (**FTPConsumer** and **FTPProducer**)
-- Routes' real transactional behaviour
+### Components
+- [x] File Endpoint component (**FILEConsumer** and **FILEProducer**)
+- [ ] FTP Endpoint component (**FTPConsumer** and **FTPProducer**)
+- [ ] Direct Endpoint component (**DIRECTConsumer** and **DIRECTProducer**)
+- [ ] SQL Endpoint component (**SQLConsumer** and **SQLProducer**)
+
+### Routing
+- [x] **RouteBuilder** with***From(string Uri)*** method.
+- [x] **RouteDefinition** with the following methods:
+	- [x] ***From(string Uri)***
+	- [x] ***SetBody(string Content, [bool Append])***
+	- [x] ***SetHeader(string Key, string Value)***
+	- [x] ***Process(Processor Processor)***
+	- [ ] ***Split(Splitter Splitter)***
+	- [x] ***Enrich(string Uri)***
+	- [x] ***To(string Uri)***
+- [ ] Routes' real transactional behaviour
+
+### Data
+- [x] Message encapsulation into a transaction model (which is only 'transactional' in name)
+
+### Unit Testing
+- [ ] Routes Testing Framework
+
+Let's carry on the good work! :metal:
