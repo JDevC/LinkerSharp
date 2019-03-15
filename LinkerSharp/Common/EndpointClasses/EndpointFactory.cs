@@ -7,6 +7,7 @@ using System.Reflection;
 namespace LinkerSharp.Common.EndpointClasses
 {
     public sealed class EndpointFactory<T> where T : IEndpoint
+
     {
         private Dictionary<string, Type> AvailableEndpoints;
 

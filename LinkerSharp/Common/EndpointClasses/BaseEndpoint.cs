@@ -45,14 +45,12 @@ namespace LinkerSharp.Common.EndpointClasses
 
         protected TransactionDTO CreateTransaction(int ID, string Origin, string FileName, Dictionary<string, string> Params, string Content)
         {
-            var Message = new TransmissionMessageDTO() { Origin = Origin, Name = FileName, Content = Content };
-
             var Result = new TransactionDTO()
             {
                 TransactionID = ID,
                 Transport = this.GetTransactionEnum(Params),
                 Headers = Params,
-                RequestMessage = Message
+                RequestMessage = new TransmissionMessageDTO() { Origin = Origin, Name = FileName, Content = Content }
             };
 
             // Checks if the transactions is made from a From() or a .Enrich() method

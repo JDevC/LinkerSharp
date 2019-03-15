@@ -81,6 +81,9 @@ namespace LinkerSharp.Common.EndpointClasses
         /// <param name="Logger"></param>
         public static void SetErrorReason(TransactionDTO DTO, string Code, string Message, string StackTrace, ILog Logger)
         {
+            if (DTO == null) { DTO = new TransactionDTO() { RequestMessage = new TransmissionMessageDTO() }; }
+            if (DTO.RequestMessage == null) { DTO.RequestMessage = new TransmissionMessageDTO(); }
+
             DTO.RequestMessage.Error.Code = Code;
             DTO.RequestMessage.Error.Reason = Message;
             DTO.RequestMessage.Error.StackTrace = StackTrace;

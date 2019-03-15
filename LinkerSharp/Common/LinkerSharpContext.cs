@@ -12,7 +12,7 @@ namespace LinkerSharp.Common
         /// <summary>
         /// Routing definition list. Every built route is appended here
         /// </summary>
-        private List<RouteBuilder> RouteBuilders;
+        private readonly List<RouteBuilder> RouteBuilders;
         #endregion
 
         #region Constructor
