@@ -1,5 +1,5 @@
-﻿using LinkerSharp.Common.EndpointClasses;
-using LinkerSharp.Common.EndpointClasses.Interfaces;
+﻿using LinkerSharp.Common.Endpoints;
+using LinkerSharp.Common.Endpoints.IFaces;
 
 namespace LinkerSharp.Common.Routing
 {

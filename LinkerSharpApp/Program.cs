@@ -12,6 +12,7 @@ namespace LinkerSharpDemo
 
             // Adding routes
             Context.AddRoute(new BaritizeRouteBuilder());
+            Context.AddRoute(new SenderRouteBuilder());
 
             // Starting process
             Context.Run();

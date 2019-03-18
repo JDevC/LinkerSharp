@@ -12,8 +12,8 @@ The original Java project can be found here: https://github.com/apache/camel
 
 ### Components
 - [x] File Endpoint component (**FILEConsumer** and **FILEProducer**)
-- [ ] FTP Endpoint component (**FTPConsumer** and **FTPProducer**)
-- [ ] Direct Endpoint component (**DIRECTConsumer** and **DIRECTProducer**)
+- [x] FTP Endpoint component (**FTPConsumer** and **FTPProducer**)
+- [x] Direct Endpoint component (**DIRECTConsumer** and **DIRECTProducer**)
 - [ ] SQL Endpoint component (**SQLConsumer** and **SQLProducer**)
 
 ### Routing

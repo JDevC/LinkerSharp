@@ -19,7 +19,8 @@ namespace LinkerSharpDemo.RouteBuilders
                     z.ResponseMessage.Content += $" {z.RequestMessage.Content}";
                     z.ResponseMessage.Name = $"TrialFile_{Now}";
                 })
-                .To($"file->{Path.Combine(FilePath, "Destiny")}");
+                //.To($"file->{Path.Combine(FilePath, "Destiny")}");
+                .To($"direct->baritize-node");
         }
     }
 }
