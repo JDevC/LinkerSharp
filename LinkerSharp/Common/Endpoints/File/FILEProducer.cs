@@ -67,7 +67,7 @@ namespace LinkerSharp.Common.Endpoints.File
         {
             if (Success && (!Properties.ContainsKey("autoclean") || !bool.TryParse(Properties["autoclean"], out bool Result) || Result))
             {
-                System.IO.File.Delete(this.Transaction.RequestMessage.Origin);
+                System.IO.File.Delete(this.Transaction.ResponseMessage.Origin);
             }
         }
         #endregion

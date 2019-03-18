@@ -10,7 +10,7 @@ namespace LinkerSharpDemo.RouteBuilders
         {
             var FilePath = AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug\netcoreapp2.1", "AppFiles");
 
-            From($"direct->baritize-node")
+            From("direct->baritize-node")
                 .SetBody("Canalized by direct route.", true)
                 .To($"file->{Path.Combine(FilePath, "Destiny")}");
         }
