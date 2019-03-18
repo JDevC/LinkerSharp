@@ -27,6 +27,7 @@ The original Java project can be found here: https://github.com/apache/camel
 	- [x] ***Enrich(string Uri)***
 	- [x] ***To(string Uri)***
 - [ ] Routes' real transactional behaviour
+- [ ] Parallel processing
 
 ### Data
 - [x] Message encapsulation into a transaction model (which is only 'transactional' in name)
