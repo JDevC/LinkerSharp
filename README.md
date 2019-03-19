@@ -4,7 +4,7 @@ LinkerSharp is (nowadays) a pure experimental attempt to port the most basic fea
 
 - A specialized DSL
 - Message routing with transactional behaviour
-- An easy way of adding custom endpoint components.
+- An easy way for adding custom endpoint components.
 
 The original Java project can be found here: https://github.com/apache/camel
 
@@ -14,7 +14,13 @@ The original Java project can be found here: https://github.com/apache/camel
 - [x] File Endpoint component (**FILEConsumer** and **FILEProducer**)
 - [x] FTP Endpoint component (**FTPConsumer** and **FTPProducer**)
 - [x] Direct Endpoint component (**DIRECTConsumer** and **DIRECTProducer**)
+- [ ] Timer Endpoint component (**TIMERConsumer**)
 - [ ] SQL Endpoint component (**SQLConsumer** and **SQLProducer**)
+
+### Behaviour
+- [x] Isolated processes by context
+- [ ] Unordered route's injection
+- [ ] Parallel processing
 
 ### Routing
 - [x] **RouteBuilder** with***From(string Uri)*** method.
@@ -22,15 +28,16 @@ The original Java project can be found here: https://github.com/apache/camel
 	- [x] ***From(string Uri)***
 	- [x] ***SetBody(string Content, [bool Append])***
 	- [x] ***SetHeader(string Key, string Value)***
+	- [ ] ***Format(Formatter Formatter)***
 	- [x] ***Process(Processor Processor)***
-	- [ ] ***Split(Splitter Splitter)***
 	- [x] ***Enrich(string Uri)***
 	- [x] ***To(string Uri)***
 - [ ] Routes' real transactional behaviour
-- [ ] Parallel processing
 
 ### Data
 - [x] Message encapsulation into a transaction model (which is only 'transactional' in name)
+- [ ] Common transaction headers:
+	- [ ] Delay
 
 ### Unit Testing
 - [ ] Routes Testing Framework
