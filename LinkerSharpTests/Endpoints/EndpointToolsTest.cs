@@ -20,10 +20,10 @@ namespace LinkerSharpTests.Endpoints
             var TestEndpointError = $"{TestExitProtocol}:{TestExitUri}";
 
             // Execution
-            EndpointTools.ResolveEndpoint(TestEndpointNoParams, out string TestProtocolNoParams, out string TestUriNoParams, out Dictionary<string, string> TestNoParams);
-            EndpointTools.ResolveEndpoint(TestEndpointOneParam, out string TestProtocolOneParam, out string TestUriOneParam, out Dictionary<string, string> TestOneParam);
-            EndpointTools.ResolveEndpoint(TestEndpointMultiParam, out string TestProtocolMultiParam, out string TestUriMultiParam, out Dictionary<string, string> TestMultipleParam);
-            EndpointTools.ResolveEndpoint(TestEndpointError, out string TestProtocolError, out string TestUriError, out Dictionary<string, string> TestErrorParams);
+            EndpointTools.ResolveEndpoint(TestEndpointNoParams, out string TestProtocolNoParams, out string TestUriNoParams, out Dictionary<string, object> TestNoParams);
+            EndpointTools.ResolveEndpoint(TestEndpointOneParam, out string TestProtocolOneParam, out string TestUriOneParam, out Dictionary<string, object> TestOneParam);
+            EndpointTools.ResolveEndpoint(TestEndpointMultiParam, out string TestProtocolMultiParam, out string TestUriMultiParam, out Dictionary<string, object> TestMultipleParam);
+            EndpointTools.ResolveEndpoint(TestEndpointError, out string TestProtocolError, out string TestUriError, out Dictionary<string, object> TestErrorParams);
 
             // Assertions
             Assert.AreEqual(TestExitProtocol, TestProtocolNoParams);

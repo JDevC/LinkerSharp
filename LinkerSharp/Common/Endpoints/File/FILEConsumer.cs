@@ -11,7 +11,7 @@ namespace LinkerSharp.Common.Endpoints.File
     {
         private static readonly log4net.ILog _Logger = log4net.LogManager.GetLogger(typeof(FILEConsumer));
 
-        public FILEConsumer(string Path)
+        public FILEConsumer(string Path, LinkerSharpContext Context) : base (Context)
         {
             this.Endpoint = Path;
         }

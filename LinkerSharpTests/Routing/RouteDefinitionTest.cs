@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using LinkerSharp.Common;
 using LinkerSharp.Common.Models;
 using LinkerSharp.Common.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,6 +15,7 @@ namespace LinkerSharpTests.Routing
         private const string TEST_MESSAGE_NAME = "TestFoo.txt";
         private const string TEST_MESSAGE_CONTENT = "Test foo message.";
 
+        private LinkerSharpContext TestContext;
         private TransmissionMessageDTO TestMessage;
         private TransactionDTO TestTransaction;
         private RouteDefinition TestRoute;
@@ -30,7 +32,9 @@ namespace LinkerSharpTests.Routing
                 ResponseMessage = this.TestMessage
             };
 
-            this.TestRoute = new RouteDefinition(new List<TransactionDTO>() { TestTransaction });
+            this.TestContext = new LinkerSharpContext();
+
+            this.TestRoute = new RouteDefinition(new List<TransactionDTO>() { TestTransaction }, this.TestContext);
         }
 
         [TestMethod]
@@ -79,7 +83,7 @@ namespace LinkerSharpTests.Routing
                 RequestMessage = TestSecondMessage,
                 ResponseMessage = TestSecondMessage
             };
-            var TestSecondRoute = new RouteDefinition(new List<TransactionDTO>() { TestSecondTransaction });
+            var TestSecondRoute = new RouteDefinition(new List<TransactionDTO>() { TestSecondTransaction }, this.TestContext);
 
             // Execution
             var TestResult = this.TestRoute.SetBody(TestMessageNewContent);

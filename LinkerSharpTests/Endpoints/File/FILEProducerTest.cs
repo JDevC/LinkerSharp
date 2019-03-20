@@ -1,4 +1,5 @@
-﻿using LinkerSharp.Common.Endpoints;
+﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.IFaces;
 using LinkerSharp.Common.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,6 +13,8 @@ namespace LinkerSharpTests.Endpoints.File
     public class FILEProducerTest
     {
         private string TestFilePath;
+        private LinkerSharpContext TestContext;
+
         private IProducer TestProducer;
         private TransmissionMessageDTO TestMessage;
 
@@ -20,8 +23,10 @@ namespace LinkerSharpTests.Endpoints.File
         {
             this.TestFilePath = $"{AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "TestFiles")}\\Destiny\\";
 
+            this.TestContext = new LinkerSharpContext();
+
             var TestFactory = new EndpointFactory<IProducer>();
-            this.TestProducer = TestFactory.GetFrom($"file->{this.TestFilePath}");
+            this.TestProducer = TestFactory.GetFrom($"file->{this.TestFilePath}", this.TestContext);
             
             this.TestMessage = new TransmissionMessageDTO() { Content = "this is a test file.", Name = "Testfile.txt", Destiny = this.TestFilePath };
         }
@@ -34,7 +39,7 @@ namespace LinkerSharpTests.Endpoints.File
             {
                 RequestMessage = TestMessage,
                 ResponseMessage = TestMessage,
-                Headers = new Dictionary<string, string>() { { "autoclean", "false" } }
+                Headers = new Dictionary<string, object>() { { "autoclean", "false" } }
             };
 
             TestProducer.Transaction = TestTransaction;

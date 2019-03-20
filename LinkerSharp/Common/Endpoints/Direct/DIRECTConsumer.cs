@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace LinkerSharp.Common.Endpoints.Direct
 {
-    internal class DIRECTConsumer : DirectEndpoint, IConsumer
+    internal sealed class DIRECTConsumer : BaseEndpoint, IConsumer
     {
-        public DIRECTConsumer(string Path)
+        public DIRECTConsumer(string Path, LinkerSharpContext Context) : base (Context)
         {
             this.Endpoint = Path;
 
-            if (!DirectQueue.ContainsKey(this.Endpoint))
+            if (!base.Context.DirectQueues.ContainsKey(this.Endpoint))
             {
-                DirectQueue[this.Endpoint] = new Queue<TransactionDTO>();
+                base.Context.DirectQueues[this.Endpoint] = new Queue<TransactionDTO>();
             }
         }
 
@@ -20,9 +20,9 @@ namespace LinkerSharp.Common.Endpoints.Direct
         {
             var Result = new List<TransactionDTO>();
 
-            if (DirectQueue.ContainsKey(this.Endpoint) && DirectQueue[this.Endpoint].Count > 0)
+            if (base.Context.DirectQueues.ContainsKey(this.Endpoint) && base.Context.DirectQueues[this.Endpoint].Count > 0)
             {
-                Result = new List<TransactionDTO>(DirectQueue[this.Endpoint]);
+                Result = new List<TransactionDTO>(base.Context.DirectQueues[this.Endpoint]);
             }
 
             return Result;

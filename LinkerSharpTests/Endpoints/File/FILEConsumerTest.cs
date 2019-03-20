@@ -1,4 +1,5 @@
-﻿using LinkerSharp.Common.Endpoints;
+﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.IFaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -10,6 +11,7 @@ namespace LinkerSharpTests.Endpoints.File
     public class FILEConsumerTest
     {
         private string TestFilePath;
+        private LinkerSharpContext TestContext;
         private EndpointFactory<IConsumer> TestConsumerFactory;
         private IConsumer TestFileConsumer;
 
@@ -18,15 +20,17 @@ namespace LinkerSharpTests.Endpoints.File
         {
             this.TestFilePath = $"{AppDomain.CurrentDomain.BaseDirectory.Replace("bin\\Debug", "TestFiles")}\\Origin\\";
 
+            this.TestContext = new LinkerSharpContext();
+
             this.TestConsumerFactory = new EndpointFactory<IConsumer>();
-            this.TestFileConsumer = this.TestConsumerFactory.GetFrom($"file->{this.TestFilePath}");
+            this.TestFileConsumer = this.TestConsumerFactory.GetFrom($"file->{this.TestFilePath}", this.TestContext);
         }
 
         [TestMethod]
         public void TestReceiveMessages()
         {
             // Arrange
-            var TestFileConsumer2 = this.TestConsumerFactory.GetFrom($"file->{this.TestFilePath}->foo=bar&foo2=baz");
+            var TestFileConsumer2 = this.TestConsumerFactory.GetFrom($"file->{this.TestFilePath}->foo=bar&foo2=baz", this.TestContext);
 
             // Execute
             var TestTransactions = this.TestFileConsumer.ReceiveMessages();

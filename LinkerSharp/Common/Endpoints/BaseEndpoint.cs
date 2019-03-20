@@ -5,17 +5,18 @@ namespace LinkerSharp.Common.Endpoints
 {
     public abstract class BaseEndpoint : IEndpoint
     {
-        #region Private Fields
+        #region Fields
+        #region Private
         private string _Endpoint = "";
         private string _Protocol = "";
-        private Dictionary<string, string> _Params;
+        private Dictionary<string, object> _Params;
+        #endregion
+        // Protected
+        protected LinkerSharpContext Context;
         #endregion
 
         #region Properties
-        public bool Success { get; protected set; }
-        #endregion
-
-        #region Public Properties
+        #region Public
         public string Protocol => this._Protocol;
 
         public string Endpoint
@@ -24,15 +25,25 @@ namespace LinkerSharp.Common.Endpoints
             set => EndpointTools.ResolveEndpoint(value, out this._Protocol, out this._Endpoint, out this._Params);
         }
 
-        public Dictionary<string, string> Params => this._Params;
+        public Dictionary<string, object> Params => this._Params;
 
         public TransactionDTO Transaction { get; set; }
         #endregion
 
-        #region Protected Methods: Helpers
-        protected TransportTypeEnum GetTransactionEnum(Dictionary<string, string> Params)
+        public bool Success { get; protected set; }
+        #endregion
+
+        #region Constructors
+        protected BaseEndpoint(LinkerSharpContext Context)
         {
-            if (Params.ContainsKey("just-in") && bool.TryParse(Params["just-in"], out bool Val) && Val)
+            this.Context = Context;
+        }
+        #endregion
+
+        #region Protected Methods: Helpers
+        protected TransportTypeEnum GetTransactionEnum(Dictionary<string, object> Params)
+        {
+            if (Params.ContainsKey("just-in") && bool.TryParse(Params["just-in"].ToString(), out bool Val) && Val)
             {
                 return TransportTypeEnum.JUST_IN;
             }
@@ -42,7 +53,7 @@ namespace LinkerSharp.Common.Endpoints
             }
         }
 
-        protected TransactionDTO CreateTransaction(int ID, string Origin, string FileName, Dictionary<string, string> Params, string Content)
+        protected TransactionDTO CreateTransaction(int ID, string Origin, string FileName, Dictionary<string, object> Params, string Content)
         {
             var Result = new TransactionDTO()
             {

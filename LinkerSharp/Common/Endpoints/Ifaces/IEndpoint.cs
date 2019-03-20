@@ -9,7 +9,7 @@ namespace LinkerSharp.Common.Endpoints
 
         string Endpoint { get; set; }
 
-        Dictionary<string, string> Params { get; }
+        Dictionary<string, object> Params { get; }
 
         string Protocol { get; }
 

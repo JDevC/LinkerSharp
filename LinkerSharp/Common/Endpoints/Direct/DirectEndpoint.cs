@@ -20,5 +20,7 @@ namespace LinkerSharp.Common.Endpoints.Direct
             }
             set { _DirectQueue = value; }
         }
+
+        protected DirectEndpoint(LinkerSharpContext Context) : base (Context) { }
     }
 }

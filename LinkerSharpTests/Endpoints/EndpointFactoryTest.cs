@@ -1,4 +1,5 @@
-﻿using LinkerSharp.Common.Endpoints;
+﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.IFaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -9,6 +10,14 @@ namespace LinkerSharp.Endpoints
     [TestClass]
     public class EndpointFactoryTest
     {
+        private LinkerSharpContext TestContext;
+
+        [TestInitialize]
+        public void Init()
+        {
+            this.TestContext = new LinkerSharpContext();
+        }
+
         [TestMethod]
         public void TestGetSeseConsumer()
         {
@@ -18,8 +27,8 @@ namespace LinkerSharp.Endpoints
             var TestFTPEndpoint = "ftp://foo/bar";
 
             // Execute
-            var TestExistingFileConsumer = TestFactory.GetFrom($"file->{TestFileEndpoint}");
-            var TestExistingFtpConsumer = TestFactory.GetFrom($"ftp->{TestFTPEndpoint}");
+            var TestExistingFileConsumer = TestFactory.GetFrom($"file->{TestFileEndpoint}", this.TestContext);
+            var TestExistingFtpConsumer = TestFactory.GetFrom($"ftp->{TestFTPEndpoint}", this.TestContext);
 
             // Assertions
             Assert.AreEqual("FILE", TestExistingFileConsumer.Protocol, $"Wrong protocol assigned!");
@@ -37,8 +46,8 @@ namespace LinkerSharp.Endpoints
             var TestFTPEndpoint = "ftp://foo/bar";
 
             // Execute
-            var TestExistingFileProducer = TestFactory.GetFrom($"file->{TestFileEndpoint}");
-            var TestExistingFtpProducer = TestFactory.GetFrom($"ftp->{TestFTPEndpoint}");
+            var TestExistingFileProducer = TestFactory.GetFrom($"file->{TestFileEndpoint}", this.TestContext);
+            var TestExistingFtpProducer = TestFactory.GetFrom($"ftp->{TestFTPEndpoint}", this.TestContext);
 
             // Assertions
             Assert.AreEqual("FILE", TestExistingFileProducer.Protocol, $"Wrong protocol assigned!");
@@ -62,7 +71,7 @@ namespace LinkerSharp.Endpoints
             // Execution and assertions
             try
             {
-                var TestBadEndpoint = TestConsumerFactory.GetFrom(@"foo->\\foo\bar");
+                var TestBadEndpoint = TestConsumerFactory.GetFrom(@"foo->\\foo\bar", this.TestContext);
                 Assert.Fail(NotThrownFailMsg);
             }
             catch (KeyNotFoundException NotFoundEx)
@@ -76,7 +85,7 @@ namespace LinkerSharp.Endpoints
 
             try
             {
-                var TestBadEndpoint = TestProducerFactory.GetFrom(@"foo->\\foo\bar");
+                var TestBadEndpoint = TestProducerFactory.GetFrom(@"foo->\\foo\bar", this.TestContext);
                 Assert.Fail(NotThrownFailMsg);
             }
             catch (KeyNotFoundException NotFoundEx)

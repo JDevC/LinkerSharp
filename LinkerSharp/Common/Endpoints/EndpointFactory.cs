@@ -6,7 +6,6 @@ using System.Reflection;
 namespace LinkerSharp.Common.Endpoints
 {
     public sealed class EndpointFactory<T> where T : IEndpoint
-
     {
         private Dictionary<string, Type> AvailableEndpoints;
 
@@ -17,7 +16,7 @@ namespace LinkerSharp.Common.Endpoints
                 .ToDictionary(a => a.Name, a => a);
         }
 
-        public T GetFrom(string Endpoint)
+        public T GetFrom(string Endpoint, LinkerSharpContext Context)
         {
             var Protocol = Endpoint.Substring(0, Endpoint.IndexOf("->")).ToUpper();
             var IFaceSuffix = typeof(T).Name.Replace("I", "");
@@ -26,7 +25,7 @@ namespace LinkerSharp.Common.Endpoints
 
             if (this.AvailableEndpoints.ContainsKey(ClassName))
             {
-                return (T)Activator.CreateInstance(this.AvailableEndpoints[ClassName], new object[] { Endpoint });
+                return (T)Activator.CreateInstance(this.AvailableEndpoints[ClassName], new object[] { Endpoint, Context });
             }
             else
             {

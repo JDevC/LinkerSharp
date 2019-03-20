@@ -23,11 +23,11 @@ namespace LinkerSharp.Common.Endpoints
         /// <param name="Protocol"></param>
         /// <param name="Uri"></param>
         /// <param name="Params"></param>
-        public static void ResolveEndpoint(string Endpoint, out string Protocol, out string Uri, out Dictionary<string, string> Params)
+        public static void ResolveEndpoint(string Endpoint, out string Protocol, out string Uri, out Dictionary<string, object> Params)
         {
             Protocol = "";
             Uri = "";
-            Params = new Dictionary<string, string>();
+            Params = new Dictionary<string, object>();
 
             if (!string.IsNullOrEmpty(Endpoint) && !string.IsNullOrWhiteSpace(Endpoint))
             {

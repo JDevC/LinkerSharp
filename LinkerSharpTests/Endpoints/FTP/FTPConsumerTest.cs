@@ -1,4 +1,5 @@
-﻿using LinkerSharp.Common.Endpoints;
+﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.FTP;
 using LinkerSharp.Common.Endpoints.IFaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,12 +12,15 @@ namespace LinkerSharpTests.Endpoints.FTP
     public class FTPConsumerTest
     {
         private string TestFtpUrl;
+        private LinkerSharpContext TestContext;
         private EndpointFactory<IConsumer> TestConsumerFactory;
 
         [TestInitialize]
         public void Init()
         {
             this.TestFtpUrl = $"{AppDomain.CurrentDomain.BaseDirectory.Replace("bin\\Debug", "TestFiles")}\\Origin\\";
+
+            this.TestContext = new LinkerSharpContext();
 
             this.TestConsumerFactory = new EndpointFactory<IConsumer>();
             //this.TestFtpConsumer = this.TestConsumerFactory.GetFrom($"ftp->{this.TestFtpUrl}");
@@ -26,8 +30,8 @@ namespace LinkerSharpTests.Endpoints.FTP
         public void TestReceiveMessages()
         {
             // Arrange
-            var TestFtpConsumer = new FTPConsumer($"ftp->{this.TestFtpUrl}", new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
-            var TestFtpConsumer2 = this.TestConsumerFactory.GetFrom($"ftp->{this.TestFtpUrl}->foo=bar&foo2=baz");
+            var TestFtpConsumer = new FTPConsumer($"ftp->{this.TestFtpUrl}", this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
+            var TestFtpConsumer2 = this.TestConsumerFactory.GetFrom($"ftp->{this.TestFtpUrl}->foo=bar&foo2=baz", this.TestContext);
 
             // Execute
             var TestTransactions = TestFtpConsumer.ReceiveMessages();
@@ -52,8 +56,8 @@ namespace LinkerSharpTests.Endpoints.FTP
         public void TestReceiveMessagesErrors()
         {
             // Arrange
-            var TestFtpConsumer = new FTPConsumer($"ftp->{this.TestFtpUrl}", new FTPConnectorMock(FTPConnectorMock.Behaviour.NO_SUCCESS));
-            var TestFtpConsumer2 = new FTPConsumer($"ftp->{this.TestFtpUrl}", new FTPConnectorMock(FTPConnectorMock.Behaviour.WEB_EXCEPTION));
+            var TestFtpConsumer = new FTPConsumer($"ftp->{this.TestFtpUrl}", this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.NO_SUCCESS));
+            var TestFtpConsumer2 = new FTPConsumer($"ftp->{this.TestFtpUrl}", this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.WEB_EXCEPTION));
 
             // Execute
             var TestTransactions = TestFtpConsumer.ReceiveMessages();
@@ -80,7 +84,7 @@ namespace LinkerSharpTests.Endpoints.FTP
         public void TestReceiveMessagesInJustInMode()
         {
             // Arrange
-            var TestFtpConsumer = new FTPConsumer($"ftp->{this.TestFtpUrl}", new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
+            var TestFtpConsumer = new FTPConsumer($"ftp->{this.TestFtpUrl}", this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
             TestFtpConsumer.Params.Add("just-in", "true");
 
             // Execute

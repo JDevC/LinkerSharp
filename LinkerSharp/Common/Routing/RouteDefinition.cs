@@ -13,9 +13,15 @@ namespace LinkerSharp.Common.Routing
         /// </summary>
         private List<TransactionDTO> Transactions { get; set; }
 
-        public RouteDefinition(List<TransactionDTO> Transactions)
+        /// <summary>
+        /// The context which it belongs.
+        /// </summary>
+        private LinkerSharpContext Context { get; set; }
+
+        public RouteDefinition(List<TransactionDTO> Transactions, LinkerSharpContext Context)
         {
             this.Transactions = Transactions;
+            this.Context = Context;
         }
 
         #region Public Methods: Routing
@@ -49,7 +55,7 @@ namespace LinkerSharp.Common.Routing
         {
             var ConsumerFactory = new EndpointFactory<IConsumer>();
 
-            var Consumer = ConsumerFactory.GetFrom(Uri);
+            var Consumer = ConsumerFactory.GetFrom(Uri, Context);
             Consumer.Params["just-in"] = "true";
 
             var Result = Consumer.ReceiveMessages().FirstOrDefault();
@@ -69,7 +75,7 @@ namespace LinkerSharp.Common.Routing
         {
             var ProducerFactory = new EndpointFactory<IProducer>();
 
-            var Producer = ProducerFactory.GetFrom(Uri);
+            var Producer = ProducerFactory.GetFrom(Uri, Context);
 
             foreach (var Transaction in this.Transactions)
             {

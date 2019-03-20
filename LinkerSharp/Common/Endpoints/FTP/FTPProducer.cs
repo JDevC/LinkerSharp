@@ -5,20 +5,20 @@ using LinkerSharp.Common.Endpoints.IFaces;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("LinkerSharpTests")]
 namespace LinkerSharp.Common.Endpoints.FTP
 {
-    internal class FTPProducer : BaseEndpoint, IProducer
+    internal sealed class FTPProducer : BaseEndpoint, IProducer
     {
         private static readonly log4net.ILog _Logger = log4net.LogManager.GetLogger(typeof(FTPProducer));
 
         private IFTPOutConnector Connector { get; set; }
 
         #region Constructors
-        public FTPProducer(string Uri)
+        public FTPProducer(string Uri, LinkerSharpContext Context) : base(Context)
         {
             this.Endpoint = Uri;
             this.Connector = new DefaultFTPConnector();
         }
 
-        public FTPProducer(string Uri, IFTPOutConnector OutConnector)
+        public FTPProducer(string Uri, LinkerSharpContext Context, IFTPOutConnector OutConnector) : base(Context)
         {
             this.Endpoint = Uri;
             this.Connector = OutConnector ?? new DefaultFTPConnector();

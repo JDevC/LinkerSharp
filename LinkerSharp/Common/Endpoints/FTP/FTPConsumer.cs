@@ -10,21 +10,21 @@ using System.Net;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("LinkerSharpTests")]
 namespace LinkerSharp.Common.Endpoints.FTP
 {
-    internal class FTPConsumer : BaseEndpoint, IConsumer
+    internal sealed class FTPConsumer : BaseEndpoint, IConsumer
     {
         private static readonly log4net.ILog _Logger = log4net.LogManager.GetLogger(typeof(FTPConsumer));
 
         private IFTPInConnector Connector { get; set; }
 
         #region Constructors
-        public FTPConsumer(string Uri)
+        public FTPConsumer(string Uri, LinkerSharpContext Context) : base (Context)
         {
             this.Endpoint = Uri;
 
             this.Connector = new DefaultFTPConnector();
         }
 
-        public FTPConsumer(string Uri, IFTPInConnector Connector = null)
+        public FTPConsumer(string Uri, LinkerSharpContext Context, IFTPInConnector Connector = null) : base(Context)
         {
             this.Endpoint = Uri;
 

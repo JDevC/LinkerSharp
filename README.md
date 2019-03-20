@@ -14,6 +14,7 @@ The original Java project can be found here: https://github.com/apache/camel
 - [x] File Endpoint component (**FILEConsumer** and **FILEProducer**)
 - [x] FTP Endpoint component (**FTPConsumer** and **FTPProducer**)
 - [x] Direct Endpoint component (**DIRECTConsumer** and **DIRECTProducer**)
+- [ ] Email Endpoint component (**EMAILConsumer** and **EMAILProducer**)
 - [ ] Timer Endpoint component (**TIMERConsumer**)
 - [ ] SQL Endpoint component (**SQLConsumer** and **SQLProducer**)
 

@@ -1,4 +1,5 @@
-﻿using LinkerSharp.Common.Endpoints;
+﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.FTP;
 using LinkerSharp.Common.Endpoints.IFaces;
 using LinkerSharp.Common.Models;
@@ -13,6 +14,7 @@ namespace LinkerSharpTests.Endpoints.FTP
     public class FTPProducerTest
     {
         private string TestFilePath;
+        private LinkerSharpContext TestContext;
         private IProducer TestProducer;
         private TransmissionMessageDTO TestMessage;
 
@@ -21,8 +23,10 @@ namespace LinkerSharpTests.Endpoints.FTP
         {
             this.TestFilePath = $"{AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "TestFiles")}\\Destiny\\";
 
+            this.TestContext = new LinkerSharpContext();
+
             var TestFactory = new EndpointFactory<IProducer>();
-            this.TestProducer = new FTPProducer(this.TestFilePath, new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
+            this.TestProducer = new FTPProducer(this.TestFilePath, this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
             
             this.TestMessage = new TransmissionMessageDTO() { Content = "This is a test file.", Name = "Testfile.txt", Destiny = this.TestFilePath };
         }
@@ -35,7 +39,7 @@ namespace LinkerSharpTests.Endpoints.FTP
             {
                 RequestMessage = TestMessage,
                 ResponseMessage = TestMessage,
-                Headers = new Dictionary<string, string>() { { "autoclean", "false" } }
+                Headers = new Dictionary<string, object>() { { "autoclean", "false" } }
             };
 
             TestProducer.Transaction = TestTransaction;
@@ -44,8 +48,8 @@ namespace LinkerSharpTests.Endpoints.FTP
             var TestMessages = TestProducer.SendMessage();
 
             // Assertions
-            Assert.AreEqual("FILE", TestProducer.Protocol, "FILEProducer should have been set as 'FILE' Protocol!");
-            Assert.IsTrue(TestProducer.Success, "FILEProducer should have been successfull!");
+            Assert.AreEqual("FTP", TestProducer.Protocol, "FTPProducer should have been set as 'FTP' Protocol!");
+            Assert.IsTrue(TestProducer.Success, "FTPProducer should have been successfull!");
         }
 
         [TestCleanup]

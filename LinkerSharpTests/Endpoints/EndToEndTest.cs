@@ -1,4 +1,5 @@
-﻿using LinkerSharp.Common.Endpoints;
+﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.IFaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -15,14 +16,15 @@ namespace LinkerSharpTests.Endpoints
         public void TestFullRouteEndpoints()
         {
             // Arrange
+            var TestContext = new LinkerSharpContext();
             var TestFilePath = AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "TestFiles");
             var TestDestiny = $"{TestFilePath}\\Destiny\\";
 
             var TestConsumerFactory = new EndpointFactory<IConsumer>();
             var TestProducerFactory = new EndpointFactory<IProducer>();
 
-            var TestFileConsumer = TestConsumerFactory.GetFrom($"file->{TestFilePath}\\Origin\\->autoclean=false");
-            var TestFileProducer = TestProducerFactory.GetFrom($"file->{TestDestiny}");
+            var TestFileConsumer = TestConsumerFactory.GetFrom($"file->{TestFilePath}\\Origin\\->autoclean=false", TestContext);
+            var TestFileProducer = TestProducerFactory.GetFrom($"file->{TestDestiny}", TestContext);
 
             // Execute
             var TestTransactions = TestFileConsumer.ReceiveMessages();

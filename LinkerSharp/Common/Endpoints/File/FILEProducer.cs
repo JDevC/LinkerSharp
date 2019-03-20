@@ -15,7 +15,7 @@ namespace LinkerSharp.Common.Endpoints.File
         private const string AutoCleanParamDefault = "true";
         #endregion
 
-        public FILEProducer(string Path)
+        public FILEProducer(string Path, LinkerSharpContext Context) : base (Context)
         {
             this.Endpoint = Path;
             if (!this.Params.ContainsKey(AutoCleanParamKey))
@@ -63,9 +63,9 @@ namespace LinkerSharp.Common.Endpoints.File
         }
 
         #region Private Methods
-        private void CleanFilesAfterProcessing(bool Success, Dictionary<string, string> Properties)
+        private void CleanFilesAfterProcessing(bool Success, Dictionary<string, object> Properties)
         {
-            if (Success && (!Properties.ContainsKey("autoclean") || !bool.TryParse(Properties["autoclean"], out bool Result) || Result))
+            if (Success && (!Properties.ContainsKey("autoclean") || !bool.TryParse(Properties["autoclean"].ToString(), out bool Result) || Result))
             {
                 System.IO.File.Delete(this.Transaction.ResponseMessage.Origin);
             }

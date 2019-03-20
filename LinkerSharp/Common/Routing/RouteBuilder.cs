@@ -5,6 +5,11 @@ namespace LinkerSharp.Common.Routing
 {
     public abstract class RouteBuilder
     {
+        // Internal Fields
+        internal LinkerSharpContext _Context;
+
+        public LinkerSharpContext Context => this._Context;
+
         /// <summary>
         /// This method is intended to execute the complete messaging route.
         /// </summary>
@@ -19,9 +24,9 @@ namespace LinkerSharp.Common.Routing
         {
             var ConsumerFactory = new EndpointFactory<IConsumer>();
 
-            var Consumer = ConsumerFactory.GetFrom(Uri);
+            var Consumer = ConsumerFactory.GetFrom(Uri, this.Context);
 
-            return new RouteDefinition(Consumer.ReceiveMessages());
+            return new RouteDefinition(Consumer.ReceiveMessages(), this.Context);
         }
     }
 }

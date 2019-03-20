@@ -13,7 +13,8 @@ namespace LinkerSharpDemo.RouteBuilders
             From($"file->{Path.Combine(FilePath, "Origin")}->autoclean=false")
                 .SetBody("bar", true)
                 .Enrich($"file->{Path.Combine(FilePath, @"Enrichment\TestEnrichmentFile.txt")}")
-                .Process(z => {
+                .Process(z =>
+                {
                     var Now = DateTime.UtcNow.Ticks;
 
                     z.ResponseMessage.Content += $" {z.RequestMessage.Content}";

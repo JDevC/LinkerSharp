@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace LinkerSharp.Common.Endpoints.Direct
 {
-    internal class DIRECTProducer : DirectEndpoint, IProducer
+    internal sealed class DIRECTProducer : BaseEndpoint, IProducer
     {
-        public DIRECTProducer(string Path)
+        public DIRECTProducer(string Path, LinkerSharpContext Context) : base (Context)
         {
             this.Endpoint = Path;
 
-            if (!DirectQueue.ContainsKey(this.Endpoint))
+            if (!base.Context.DirectQueues.ContainsKey(this.Endpoint))
             {
-                DirectQueue[this.Endpoint] = new Queue<TransactionDTO>();
+                base.Context.DirectQueues[this.Endpoint] = new Queue<TransactionDTO>();
             }
 
             this.Transaction = new TransactionDTO() { ResponseMessage = new TransmissionMessageDTO() };
@@ -20,7 +20,7 @@ namespace LinkerSharp.Common.Endpoints.Direct
 
         public bool SendMessage()
         {
-            DirectQueue[this.Endpoint].Enqueue(this.Transaction);
+            base.Context.DirectQueues[this.Endpoint].Enqueue(this.Transaction);
 
             return true;
         }
