@@ -1,4 +1,5 @@
 ﻿using LinkerSharp.Common.Routing;
+using LinkerSharp.TransactionHeaders;
 using System;
 using System.IO;
 
@@ -10,7 +11,7 @@ namespace LinkerSharpDemo.RouteBuilders
         {
             var FilePath = AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug\netcoreapp2.1", "AppFiles");
 
-            From($"file->{Path.Combine(FilePath, "Origin")}->autoclean=false")
+            From($"file->{Path.Combine(FilePath, "Origin")}->{Headers.AUTOCLEAN}=false")
                 .SetBody("bar", true)
                 .Enrich($"file->{Path.Combine(FilePath, @"Enrichment\TestEnrichmentFile.txt")}")
                 .Process(z =>

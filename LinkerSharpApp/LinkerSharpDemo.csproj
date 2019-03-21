@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <Folder Include="AppFiles\Destiny\" />
-    <Folder Include="AppFiles\Origin\" />
   </ItemGroup>
 
 </Project>

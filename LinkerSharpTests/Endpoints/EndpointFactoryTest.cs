@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
-namespace LinkerSharp.Endpoints
+namespace LinkerSharpTests.Endpoints
 {
     [TestClass]
     public class EndpointFactoryTest
@@ -19,7 +19,7 @@ namespace LinkerSharp.Endpoints
         }
 
         [TestMethod]
-        public void TestGetSeseConsumer()
+        public void TestGetConsumer()
         {
             // Arrange
             var TestFactory = new EndpointFactory<IConsumer>();
@@ -38,7 +38,7 @@ namespace LinkerSharp.Endpoints
         }
 
         [TestMethod]
-        public void TestGetSeseProducer()
+        public void TestGetProducer()
         {
             // Arrange
             var TestFactory = new EndpointFactory<IProducer>();

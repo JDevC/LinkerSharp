@@ -3,9 +3,9 @@ using LinkerSharp.Common.Endpoints.FTP.IFaces;
 using LinkerSharp.Common.Endpoints.IFaces;
 using LinkerSharp.Common.Models;
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Net;
+using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("LinkerSharpTests")]
 namespace LinkerSharp.Common.Endpoints.FTP
@@ -37,66 +37,51 @@ namespace LinkerSharp.Common.Endpoints.FTP
         {
             this.Transaction = new TransactionDTO();
 
+            var Result = new List<TransactionDTO>();
             try
             {
-                this.Success = this.Connector.GetData(this.Endpoint, out string StatusCode, out string DataResult);
+                this.Success = this.Connector.GetData(this.Endpoint, this.Params, out string StatusCode, out List<TransmissionMessageDTO> DataResult);
 
                 if (this.Success)
                 {
-                    this.Transaction = base.CreateTransaction(1, this.Endpoint, "", this.Params, DataResult);
+                    for (int i = 0; i < DataResult.Count; i++)
+                    {
+                        Result.Add(base.CreateTransaction(i + 1, this.Endpoint, DataResult[i].Name, this.Params, DataResult[i].Content));
+                    }
                 }
                 else
                 {
-                    // Error handling
-                    EndpointTools.SetErrorReason(this.Transaction, StatusCode, $"Message couldn't be sent: {DataResult}", "", _Logger);
+                    Result.AddRange(this.HandleErrorMessages(DataResult, StatusCode));
                 }
             }
             catch (WebException WebEx)
             {
                 EndpointTools.SetErrorReason(this.Transaction, "", $"Incorrect endpoint (value -> {this.Endpoint}): {WebEx.Message}", WebEx.StackTrace, _Logger);
+                Result.Add(this.Transaction);
             }
             catch (Exception Ex)
             {
                 EndpointTools.SetErrorReason(this.Transaction, "", $"Unable to get response from {this.Endpoint}: {Ex.Message}", Ex.StackTrace, _Logger);
+                Result.Add(this.Transaction);
             }
 
-            return new List<TransactionDTO>() { this.Transaction };
+            return Result;
         }
         #endregion
 
         #region Private Methods
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Endpoint"></param>
-        /// <param name="Success"></param>
-        /// <param name="Data"></param>
-        private bool RequestHandler(string Endpoint, out string StatusCode, out string Data)
+        private List<TransactionDTO> HandleErrorMessages(List<TransmissionMessageDTO> Messages, string StatusCode)
         {
-            bool Result = false;
-            Data = "";
+            var ErrorMessages = Messages.Where(x => x.Error != null && !string.IsNullOrEmpty(x.Error.Reason) && !string.IsNullOrWhiteSpace(x.Error.Reason));
 
-            var Request = WebRequest.Create(this.Endpoint);
+            var Result = new List<TransactionDTO>();
 
-            using (var Response = Request.GetResponse() as HttpWebResponse)
+            foreach (var ErrorMsg in ErrorMessages)
             {
-                StatusCode = Response.StatusCode.ToString();
-                Result = Response.StatusCode.Equals(HttpStatusCode.OK);
+                var ErrorTransaction = new TransactionDTO() { RequestMessage = ErrorMsg, ResponseMessage = ErrorMsg };
 
-                if (Result)
-                {
-                    using (var DataStream = Response.GetResponseStream())
-                    {
-                        using (var DataReader = new StreamReader(DataStream))
-                        {
-                            Data = DataReader.ReadToEnd();
-                        }
-                    }
-                }
-                else
-                {
-                    Data = Response.StatusDescription;
-                }
+                EndpointTools.SetErrorReason(ErrorTransaction, StatusCode, $"Message couldn't be sent: {ErrorMsg.Error.Reason}", "", _Logger);
+                Result.Add(ErrorTransaction);
             }
 
             return Result;

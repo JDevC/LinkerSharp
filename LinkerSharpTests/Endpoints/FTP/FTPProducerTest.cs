@@ -3,6 +3,7 @@ using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.FTP;
 using LinkerSharp.Common.Endpoints.IFaces;
 using LinkerSharp.Common.Models;
+using LinkerSharp.TransactionHeaders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,9 @@ namespace LinkerSharpTests.Endpoints.FTP
             this.TestContext = new LinkerSharpContext();
 
             var TestFactory = new EndpointFactory<IProducer>();
-            this.TestProducer = new FTPProducer(this.TestFilePath, this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
-            
+            this.TestProducer = new FTPProducer($"ftp->{this.TestFilePath}", this.TestContext, new FTPConnectorMock(FTPConnectorMock.Behaviour.SUCCESS));
+
+
             this.TestMessage = new TransmissionMessageDTO() { Content = "This is a test file.", Name = "Testfile.txt", Destiny = this.TestFilePath };
         }
 

@@ -1,4 +1,5 @@
 ﻿using LinkerSharp.Common.Models;
+using LinkerSharp.TransactionHeaders;
 using System.Collections.Generic;
 
 namespace LinkerSharp.Common.Endpoints
@@ -43,7 +44,7 @@ namespace LinkerSharp.Common.Endpoints
         #region Protected Methods: Helpers
         protected TransportTypeEnum GetTransactionEnum(Dictionary<string, object> Params)
         {
-            if (Params.ContainsKey("just-in") && bool.TryParse(Params["just-in"].ToString(), out bool Val) && Val)
+            if (Params.ContainsKey(Headers.JUST_IN) && bool.TryParse(Params[Headers.JUST_IN].ToString(), out bool Val) && Val)
             {
                 return TransportTypeEnum.JUST_IN;
             }

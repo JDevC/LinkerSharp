@@ -18,14 +18,9 @@ namespace LinkerSharp.Common.Endpoints.Direct
 
         public List<TransactionDTO> ReceiveMessages()
         {
-            var Result = new List<TransactionDTO>();
-
-            if (base.Context.DirectQueues.ContainsKey(this.Endpoint) && base.Context.DirectQueues[this.Endpoint].Count > 0)
-            {
-                Result = new List<TransactionDTO>(base.Context.DirectQueues[this.Endpoint]);
-            }
-
-            return Result;
+            return base.Context.DirectQueues.ContainsKey(this.Endpoint) && base.Context.DirectQueues[this.Endpoint].Count > 0 ?
+                new List<TransactionDTO>(base.Context.DirectQueues[this.Endpoint]) :
+                new List<TransactionDTO>();
         }
     }
 }

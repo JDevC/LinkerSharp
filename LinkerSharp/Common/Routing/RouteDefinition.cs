@@ -1,6 +1,7 @@
 ﻿using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.IFaces;
 using LinkerSharp.Common.Models;
+using LinkerSharp.TransactionHeaders;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,7 +57,7 @@ namespace LinkerSharp.Common.Routing
             var ConsumerFactory = new EndpointFactory<IConsumer>();
 
             var Consumer = ConsumerFactory.GetFrom(Uri, Context);
-            Consumer.Params["just-in"] = "true";
+            Consumer.Params[Headers.JUST_IN] = "true";
 
             var Result = Consumer.ReceiveMessages().FirstOrDefault();
             foreach (var Transaction in this.Transactions)

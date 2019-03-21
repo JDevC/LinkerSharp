@@ -1,5 +1,6 @@
 ﻿using LinkerSharp.Common.Endpoints.FTP.IFaces;
 using LinkerSharp.Common.Models;
+using System.Collections.Generic;
 using System.Net;
 
 namespace LinkerSharpTests.Endpoints.FTP
@@ -20,20 +21,20 @@ namespace LinkerSharpTests.Endpoints.FTP
             this._Behaviour = Behaviour;
         }
 
-        public bool GetData(string Endpoint, out string StatusCode, out string Data)
+        public bool GetData(string Endpoint, Dictionary<string, object> Params, out string StatusCode, out List<TransmissionMessageDTO> Data)
         {
             StatusCode = "Success";
-            Data = "Data from FTP Mock.";
+            Data = new List<TransmissionMessageDTO>();
 
             switch (this._Behaviour)
             {
                 case Behaviour.SUCCESS:
                     StatusCode = "Success";
-                    Data = "Data from FTP Mock.";
+                    Data.Add(new TransmissionMessageDTO() { Content = "Data from FTP Mock." });
                     return true;
                 case Behaviour.NO_SUCCESS:
                     StatusCode = "Error";
-                    Data = "Error reason from FTP Mock.";
+                    Data.Add(new TransmissionMessageDTO() { Error = new TransmissionMessageErrorDTO() { Code = "Error", Reason = "Error reason from FTP Mock." } });
                     return false;
                 case Behaviour.WEB_EXCEPTION:
                     throw new WebException("Web exception from FTP Mock");

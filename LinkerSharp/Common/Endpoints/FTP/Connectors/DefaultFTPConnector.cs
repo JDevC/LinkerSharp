@@ -1,37 +1,29 @@
 ﻿using LinkerSharp.Common.Endpoints.FTP.IFaces;
 using LinkerSharp.Common.Models;
+using LinkerSharp.TransactionHeaders;
 using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
 
 namespace LinkerSharp.Common.Endpoints.FTP.Connectors
 {
     public class DefaultFTPConnector : IFTPInConnector, IFTPOutConnector
     {
-        public bool GetData(string Endpoint, out string StatusCode, out string Data)
+        public bool GetData(string Endpoint, Dictionary<string, object> Params, out string StatusCode, out List<TransmissionMessageDTO> Data)
         {
             bool Result = false;
-            Data = "";
+            Data = new List<TransmissionMessageDTO>();
 
-            var Request = WebRequest.Create(Endpoint);
-
-            using (var Response = Request.GetResponse() as HttpWebResponse)
+            if (Params.ContainsKey(Headers.JUST_IN) && bool.TryParse(Params[Headers.JUST_IN].ToString(), out bool Val) && Val)
             {
-                StatusCode = Response.StatusCode.ToString();
-                Result = Response.StatusCode.Equals(HttpStatusCode.OK);
-
-                if (Result)
-                {
-                    using (var DataStream = Response.GetResponseStream())
-                    {
-                        Data = this.ExtractFromStream(DataStream);
-                    }
-                }
-                else
-                {
-                    Data = Response.StatusDescription;
-                }
+                Result = this.GetSingleFile(Endpoint, out StatusCode, out TransmissionMessageDTO DataUnit);
+                Data.Add(DataUnit);
+            }
+            else
+            {
+                Result = this.GetMultiFiles(Endpoint, out StatusCode, out Data);
             }
 
             return Result;
@@ -69,15 +61,90 @@ namespace LinkerSharp.Common.Endpoints.FTP.Connectors
         }
 
         #region Private Methods: Helpers
+        private bool GetSingleFile(string Endpoint, out string StatusCode, out TransmissionMessageDTO Data)
+        {
+            var Result = false;
+            StatusCode = "";
+
+            var Request = WebRequest.Create(Endpoint) as FtpWebRequest;
+            Request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+            using (var Response = Request.GetResponse() as FtpWebResponse)
+            {
+                StatusCode = Response.StatusCode.ToString();
+                Result = Response.StatusCode.Equals(HttpStatusCode.OK);
+
+                if (Result)
+                {
+                    using (var DataStream = Response.GetResponseStream())
+                    {
+                        Data = new TransmissionMessageDTO() { Content = this.ExtractFromStream(DataStream) };
+                    }
+                }
+                else
+                {
+                    Data = new TransmissionMessageDTO();
+                    Data.Error.Code = StatusCode;
+                    Data.Error.Reason = Response.StatusDescription;
+                }
+            }
+
+            return Result;
+        }
+
+        private bool GetMultiFiles(string Endpoint, out string StatusCode, out List<TransmissionMessageDTO> Data)
+        {
+            StatusCode = "";
+            Data = new List<TransmissionMessageDTO>();
+            var Result = false;
+
+            #region File List
+            var Request = WebRequest.Create(Endpoint) as FtpWebRequest;
+            Request.Method = WebRequestMethods.Ftp.ListDirectory;
+
+            var Files = new List<string>();
+            using (var Response = Request.GetResponse() as FtpWebResponse)
+            {
+                StatusCode = Response.StatusCode.ToString();
+                Result = Response.StatusCode.Equals(HttpStatusCode.OK);
+
+                if (Result)
+                {
+                    using (var DataStream = new StreamReader(Response.GetResponseStream()))
+                    {
+                        string Line = DataStream.ReadLine();
+                        while (!string.IsNullOrEmpty(Line))
+                        {
+                            Files.Add(Line);
+                            Line = DataStream.ReadLine();
+                        }
+                    }
+                }
+                else
+                {
+                    var DataUnit = new TransmissionMessageDTO();
+                    DataUnit.Error.Code = StatusCode;
+                    DataUnit.Error.Reason = Response.StatusDescription;
+
+                    Data.Add(DataUnit);
+                    return Result;
+                }
+            }
+            #endregion
+
+            foreach (var File in Files)
+            {
+                this.GetSingleFile($"{Endpoint}/{File}", out StatusCode, out TransmissionMessageDTO Message);                
+                Data.Add(Message);
+            }
+
+            return Result;
+        }
+
         private string ExtractFromStream(Stream DataStream)
         {
-            //using (var DataReader = new StreamReader(DataStream))
-            //{
-            //    return DataReader.ReadToEnd();
-            //}
-
             var StrBuilder = new StringBuilder();
-            byte[] buffer = new byte[8192];
+            var buffer = new byte[8192];
             int counter = 0;
 
             do

@@ -1,5 +1,6 @@
-﻿using LinkerSharp.Common.Endpoints.IFaces;
-using LinkerSharp.Common.Models;
+﻿using LinkerSharp.Common.Models;
+using LinkerSharp.Common.Endpoints.IFaces;
+using LinkerSharp.TransactionHeaders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,17 +11,12 @@ namespace LinkerSharp.Common.Endpoints.File
     {
         private static readonly log4net.ILog _Logger = log4net.LogManager.GetLogger(typeof(FILEProducer));
 
-        #region Private Attributes: Constants
-        private const string AutoCleanParamKey = "autoclean";
-        private const string AutoCleanParamDefault = "true";
-        #endregion
-
         public FILEProducer(string Path, LinkerSharpContext Context) : base (Context)
         {
             this.Endpoint = Path;
-            if (!this.Params.ContainsKey(AutoCleanParamKey))
+            if (!this.Params.ContainsKey(Headers.AUTOCLEAN))
             {
-                this.Params[AutoCleanParamKey] = AutoCleanParamDefault;
+                this.Params[Headers.AUTOCLEAN] = "true";
             }
 
             this.Transaction = new TransactionDTO() { ResponseMessage = new TransmissionMessageDTO() };
@@ -28,9 +24,9 @@ namespace LinkerSharp.Common.Endpoints.File
 
         public bool SendMessage()
         {
-            if (!this.Transaction.Headers.ContainsKey(AutoCleanParamKey))
+            if (!this.Transaction.Headers.ContainsKey(Headers.AUTOCLEAN))
             {
-                this.Transaction.Headers[AutoCleanParamKey] = this.Params[AutoCleanParamKey];
+                this.Transaction.Headers[Headers.AUTOCLEAN] = this.Params[Headers.AUTOCLEAN];
             }
 
             this.Transaction.ResponseMessage.Destiny = Path.Combine(this.Endpoint, this.Transaction.ResponseMessage.Name);
@@ -65,7 +61,7 @@ namespace LinkerSharp.Common.Endpoints.File
         #region Private Methods
         private void CleanFilesAfterProcessing(bool Success, Dictionary<string, object> Properties)
         {
-            if (Success && (!Properties.ContainsKey("autoclean") || !bool.TryParse(Properties["autoclean"].ToString(), out bool Result) || Result))
+            if (Success && (!Properties.ContainsKey(Headers.AUTOCLEAN) || !bool.TryParse(Properties[Headers.AUTOCLEAN].ToString(), out bool Result) || Result))
             {
                 System.IO.File.Delete(this.Transaction.ResponseMessage.Origin);
             }

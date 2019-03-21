@@ -1,7 +1,8 @@
 ﻿using LinkerSharp.Common;
+using LinkerSharp.Common.Models;
 using LinkerSharp.Common.Endpoints;
 using LinkerSharp.Common.Endpoints.IFaces;
-using LinkerSharp.Common.Models;
+using LinkerSharp.TransactionHeaders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace LinkerSharpTests.Endpoints.File
             {
                 RequestMessage = TestMessage,
                 ResponseMessage = TestMessage,
-                Headers = new Dictionary<string, object>() { { "autoclean", "false" } }
+                Headers = new Dictionary<string, object>() { { Headers.AUTOCLEAN, "false" } }
             };
 
             TestProducer.Transaction = TestTransaction;
